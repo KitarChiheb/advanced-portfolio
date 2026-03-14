@@ -1194,7 +1194,7 @@
     <script>
     // === AI CAREER ASSISTANT CHATBOT ===
     (function() {
-        const API_KEY = 'OPENROUTER_API_KEY'; // Will be replaced by Vercel during build
+        const API_KEY = process.env.OPENROUTER_API_KEY;
         const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
         
         // Free model fallback chain (5 models)
