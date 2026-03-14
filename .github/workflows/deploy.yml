@@ -115,15 +115,15 @@ jobs:
       - name: Notify Success on Discord
         if: success()
         run: |
-          MSG="✅ **Deployment Successful**"$'\n'"Site: https://portfolioai-wheat.vercel.app"$'\n'"Commit: \`$GITHUB_SHA\`"
-          curl -H "Content-Type: application/json" -X POST \
-          -d "{\"content\": \"$MSG\"}" \
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"✅ **Deployment Successful**\nSite: https://portfolioai-wheat.vercel.app\nCommit: $GITHUB_SHA\"}" \
           "${{ secrets.DISCORD_WEBHOOK }}"
 
       - name: Notify Failure on Discord
         if: failure()
         run: |
-          MSG="❌ **Deployment FAILED**"$'\n'"Site: https://portfolioai-wheat.vercel.app"$'\n'"Commit: \`$GITHUB_SHA\`"
-          curl -H "Content-Type: application/json" -X POST \
-          -d "{\"content\": \"$MSG\"}" \
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"❌ **Deployment FAILED**\nCommit: $GITHUB_SHA\"}" \
           "${{ secrets.DISCORD_WEBHOOK }}"
