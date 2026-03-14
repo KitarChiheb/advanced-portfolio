@@ -1,8 +1,18 @@
 {
+  "functions": {
+    "index.html": {
+      "maxDuration": 10
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "build": {
+    "env": {
+      "OPENROUTER_API_KEY": "@openrouter-api-key"
+    }
+  }
 }
