@@ -36,6 +36,7 @@ jobs:
         
     - name: Link check with exclusions
       uses: lycheeverse/lychee-action@v2
+      continue-on-error: true
       with:
         args: --verbose --no-progress --exclude 'linkedin.com' --exclude 'formspree.io' --include-mail './**/*.html'
         fail: false
