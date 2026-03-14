@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#08080c">
-    <title>Chiheb Kitar | Software Engineer & AI Specialist</title>
-    <meta name="description" content="Software Engineer specializing in AI, MLOps, DevOps, and full-stack development. Building intelligent systems and scalable infrastructure." />
+    <title>Chiheb Kitar | AI & MLOps Engineer | DevSecOps</title>
+    <meta name="description" content="AI & MLOps Engineer specializing in generative AI, multi-agent systems, and DevSecOps. Building production-grade LLM architectures and high-performance RAG pipelines." />
     <meta name="author" content="Chiheb Kitar">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x26A1;</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -371,6 +371,68 @@
             .hero-btns .btn { width: 100%; justify-content: center; }
             .stats-row { grid-template-columns: 1fr 1fr; }
         }
+
+        /* === AI CHATBOT === */
+        .ai-chat-widget { position: fixed; bottom: 2rem; right: 2rem; z-index: 10000; }
+        .chat-bubble { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple));
+            display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 32px rgba(0,229,255,0.3);
+            transition: all 0.3s; border: 2px solid rgba(255,255,255,0.1); }
+        .chat-bubble:hover { transform: scale(1.1); box-shadow: 0 12px 48px rgba(0,229,255,0.5); }
+        .chat-bubble i { font-size: 1.5rem; color: white; }
+        .chat-window { position: fixed; bottom: 6rem; right: 2rem; width: 420px; height: 600px;
+            background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border);
+            border-radius: 20px; display: none; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden; transition: all 0.3s; }
+        .chat-window.open { display: flex; }
+        .chat-header { padding: 1.25rem 1.5rem; background: linear-gradient(135deg, var(--cyan), var(--purple));
+            display: flex; align-items: center; justify-content: space-between; }
+        .chat-header-title { display: flex; align-items: center; gap: 0.75rem; color: white; }
+        .chat-header-title i { font-size: 1.25rem; }
+        .chat-header-title div h3 { font-size: 1rem; margin: 0; }
+        .chat-header-title div p { font-size: 0.75rem; opacity: 0.9; margin: 0; }
+        .chat-close { background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; }
+        .chat-close:hover { background: rgba(255,255,255,0.2); }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        .chat-message { display: flex; gap: 0.75rem; max-width: 85%; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .chat-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple));
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .chat-avatar i { font-size: 0.875rem; color: white; }
+        .chat-message.user .chat-avatar { background: var(--bg-glass); border: 1px solid var(--border); }
+        .chat-message.user .chat-avatar i { color: var(--cyan); }
+        .chat-bubble-text { background: var(--bg-glass); border: 1px solid var(--border); padding: 0.875rem 1.125rem;
+            border-radius: 16px; font-size: 0.9rem; line-height: 1.6; }
+        .chat-message.user .chat-bubble-text { background: linear-gradient(135deg, var(--cyan), var(--purple));
+            color: white; border: none; }
+        .chat-typing { display: flex; gap: 0.75rem; max-width: 85%; }
+        .chat-typing .chat-bubble-text { display: flex; gap: 0.4rem; padding: 1rem 1.25rem; }
+        .typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan);
+            animation: typingAnim 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingAnim { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-8px); } }
+        .chat-suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0 1.5rem 1rem; }
+        .suggestion-chip { background: var(--bg-glass); border: 1px solid var(--border); padding: 0.5rem 1rem;
+            border-radius: 100px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .suggestion-chip:hover { background: var(--cyan); color: var(--bg); border-color: var(--cyan); }
+        .chat-input-area { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; }
+        .chat-input { flex: 1; background: var(--bg-glass); border: 1px solid var(--border); border-radius: 12px;
+            padding: 0.75rem 1rem; color: var(--text); font-family: var(--font); font-size: 0.9rem; outline: none;
+            transition: all 0.2s; resize: none; max-height: 100px; }
+        .chat-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,229,255,0.1); }
+        .chat-send { background: linear-gradient(135deg, var(--cyan), var(--purple)); border: none;
+            width: 40px; height: 40px; border-radius: 12px; color: white; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+        .chat-send:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(0,229,255,0.4); }
+        .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+        @media (max-width: 768px) {
+            .chat-window { width: calc(100vw - 2rem); right: 1rem; bottom: 5rem; height: 500px; }
+            .ai-chat-widget { bottom: 1rem; right: 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -394,10 +456,10 @@
             <li><a href="#about" class="nav-link" data-en="About" data-fr="A propos">About</a></li>
             <li><a href="#experience" class="nav-link" data-en="Experience" data-fr="Experience">Experience</a></li>
             <li><a href="#projects" class="nav-link" data-en="Projects" data-fr="Projets">Projects</a></li>
-            <li><a href="#education" class="nav-link" data-en="Education" data-fr="Formation">Education</a></li>
             <li><a href="#contact" class="nav-link" data-en="Contact" data-fr="Contact">Contact</a></li>
         </ul>
         <button class="nav-lang" id="langToggle">EN</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
         <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
     </nav>
 
@@ -411,8 +473,8 @@
                 </div>
                 <p class="hero-greeting reveal reveal-delay-1" data-en="Hello, I'm" data-fr="Bonjour, je suis">Hello, I'm</p>
                 <h1 class="hero-name reveal reveal-delay-2">Chiheb <span class="highlight">Kitar</span></h1>
-                <p class="hero-title reveal reveal-delay-3" id="typewriter" data-en="Software Engineer & AI Specialist" data-fr="Ingenieur Logiciel & Specialiste IA">Software Engineer & AI Specialist</p>
-                <p class="hero-desc reveal reveal-delay-4" data-en="Crafting intelligent systems, scalable infrastructure, and end-to-end ML pipelines. From full-stack development to MLOps and cloud-native architectures." data-fr="Conception de systemes intelligents, d'infrastructures evolutives et de pipelines ML de bout en bout. Du developpement full-stack au MLOps et aux architectures cloud-natives.">Crafting intelligent systems, scalable infrastructure, and end-to-end ML pipelines. From full-stack development to MLOps and cloud-native architectures.</p>
+                <p class="hero-title reveal reveal-delay-3" id="typewriter" data-en="AI & MLOps Engineer | DevSecOps | Multi-Agent Systems | LLM" data-fr="Ingenieur IA & MLOps | DevSecOps | Systemes Multi-Agents | LLM">AI & MLOps Engineer | DevSecOps | Multi-Agent Systems | LLM</p>
+                <p class="hero-desc reveal reveal-delay-4" data-en="Specializing in generative AI, MLOps, and DevSecOps. Building multi-agent systems, high-performance RAG pipelines, and production-grade LLM architectures. Proficient in Agile, cloud-native environments, and application security." data-fr="Specialise en IA generative, MLOps et DevSecOps. Construction de systemes multi-agents, pipelines RAG haute performance et architectures LLM de production. Competent en Agile, environnements cloud-natifs et securite applicative.">Specializing in generative AI, MLOps, and DevSecOps. Building multi-agent systems, high-performance RAG pipelines, and production-grade LLM architectures. Proficient in Agile, cloud-native environments, and application security.</p>
                 <div class="hero-btns reveal reveal-delay-5">
                     <a href="#projects" class="btn btn-primary"><span data-en="View Projects" data-fr="Voir Projets">View Projects</span><i class="fas fa-arrow-right"></i></a>
                     <a href="#contact" class="btn btn-ghost"><i class="fas fa-paper-plane"></i><span data-en="Get In Touch" data-fr="Me Contacter">Get In Touch</span></a>
@@ -440,8 +502,8 @@
             </div>
             <div class="about-grid">
                 <div class="about-text reveal">
-                    <p data-en="<strong>Software Engineer</strong> with deep expertise across the full spectrum of modern tech -- from full-stack development with Spring Boot and Angular to designing ML pipelines and deploying AI models at scale. Currently completing my Master's at <strong>Universite Paris-Saclay</strong> while working at <strong>BNP Paribas</strong> on AI-driven automation and MLOps." data-fr="<strong>Ingenieur Logiciel</strong> avec une expertise approfondie sur tout le spectre des technologies modernes -- du developpement full-stack avec Spring Boot et Angular a la conception de pipelines ML et au deploiement de modeles IA a grande echelle. Actuellement en Master a l'<strong>Universite Paris-Saclay</strong> tout en travaillant chez <strong>BNP Paribas</strong> sur l'automatisation par l'IA et le MLOps."><strong>Software Engineer</strong> with deep expertise across the full spectrum of modern tech &mdash; from full-stack development with Spring Boot and Angular to designing ML pipelines and deploying AI models at scale. Currently completing my Master's at <strong>Universit&eacute; Paris-Saclay</strong> while working at <strong>BNP Paribas</strong> on AI-driven automation and MLOps.</p>
-                    <p data-en="I thrive at the intersection of software engineering and artificial intelligence, building systems that are not only performant and scalable but also intelligent. My toolkit spans Python, Java, Docker, Kubernetes, TensorFlow, and major cloud platforms." data-fr="Je m'epanouis a l'intersection du genie logiciel et de l'intelligence artificielle, en construisant des systemes performants, evolutifs et intelligents. Mon arsenal technique couvre Python, Java, Docker, Kubernetes, TensorFlow et les principales plateformes cloud.">I thrive at the intersection of software engineering and artificial intelligence, building systems that are not only performant and scalable but also intelligent. My toolkit spans Python, Java, Docker, Kubernetes, TensorFlow, and major cloud platforms.</p>
+                    <p data-en="<strong>AI & MLOps Engineer</strong> specializing in generative AI, multi-agent systems (CrewAI, AutoGen), and production-grade LLM architectures. Built a backlog automation system that cuts creation time by 70%. Experienced in designing high-performance RAG pipelines, DevSecOps workflows, and cloud-native AI deployments. Currently at <strong>BNP Paribas</strong> working on AI-driven automation with multi-agent systems." data-fr="<strong>Ingenieur IA & MLOps</strong> specialise en IA generative, systemes multi-agents (CrewAI, AutoGen) et architectures LLM de production. Construction d'un systeme d'automatisation de backlog reduisant le temps de creation de 70%. Experience en conception de pipelines RAG haute performance, workflows DevSecOps et deploiements IA cloud-natifs. Actuellement chez <strong>BNP Paribas</strong> travaillant sur l'automatisation par IA avec systemes multi-agents."><strong>AI & MLOps Engineer</strong> specializing in generative AI, multi-agent systems (CrewAI, AutoGen), and production-grade LLM architectures. Built a backlog automation system that cuts creation time by 70%. Experienced in designing high-performance RAG pipelines, DevSecOps workflows, and cloud-native AI deployments. Currently at <strong>BNP Paribas</strong> working on AI-driven automation with multi-agent systems.</p>
+                    <p data-en="I thrive at the intersection of AI engineering and DevSecOps, building intelligent systems that are production-ready, secure, and scalable. My toolkit spans LangChain, LlamaIndex, CrewAI, AutoGen, FastAPI, Docker, Kubernetes, GitLab CI/CD, and major cloud platforms (Azure, AWS, GCP)." data-fr="Je m'epanouis a l'intersection de l'ingenierie IA et du DevSecOps, en construisant des systemes intelligents prets pour la production, securises et evolutifs. Mon arsenal technique couvre LangChain, LlamaIndex, CrewAI, AutoGen, FastAPI, Docker, Kubernetes, GitLab CI/CD et les principales plateformes cloud (Azure, AWS, GCP).">I thrive at the intersection of AI engineering and DevSecOps, building intelligent systems that are production-ready, secure, and scalable. My toolkit spans LangChain, LlamaIndex, CrewAI, AutoGen, FastAPI, Docker, Kubernetes, GitLab CI/CD, and major cloud platforms (Azure, AWS, GCP).</p>
                     <div class="skills-grid">
                         <div class="skill-card"><i class="fab fa-python"></i><span>Python / ML</span><div class="lvl">Expert</div></div>
                         <div class="skill-card"><i class="fab fa-java"></i><span>Spring Boot</span><div class="lvl">Advanced</div></div>
@@ -455,8 +517,8 @@
                     <div class="stats-row reveal">
                         <div class="stat-card"><div class="stat-num">3+</div><div class="stat-lbl" data-en="Years Exp" data-fr="Ans Exp">Years Exp</div></div>
                         <div class="stat-card"><div class="stat-num">15+</div><div class="stat-lbl" data-en="Projects" data-fr="Projets">Projects</div></div>
-                        <div class="stat-card"><div class="stat-num">4</div><div class="stat-lbl" data-en="Certs" data-fr="Certifs">Certs</div></div>
-                        <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl" data-en="Countries" data-fr="Pays">Countries</div></div>
+                        <div class="stat-card"><div class="stat-num">5</div><div class="stat-lbl" data-en="Certs" data-fr="Certifs">Certs</div></div>
+                        <div class="stat-card"><div class="stat-num">2</div><div class="stat-lbl" data-en="Countries" data-fr="Pays">Countries</div></div>
                     </div>
                 </div>
             </div>
@@ -475,19 +537,21 @@
                 <div class="tl-item reveal">
                     <div class="tl-dot"></div>
                     <div class="tl-card">
-                        <div class="tl-date">Oct 2024 &mdash; Sep 2025</div>
-                        <div class="tl-role" data-en="AI Engineer & MLOps Specialist" data-fr="Ingenieur IA & Specialiste MLOps">AI Engineer & MLOps Specialist</div>
+                        <div class="tl-date">Apr 2025 &mdash; Oct 2025</div>
+                        <div class="tl-role" data-en="AI & Automation Engineer — DevSecOps Workflows" data-fr="Ingenieur IA & Automatisation — Workflows DevSecOps">AI & Automation Engineer — DevSecOps Workflows</div>
                         <div class="tl-company">BNP Paribas</div>
-                        <div class="tl-loc"><i class="fas fa-map-marker-alt"></i> <span data-en="Paris, France (Hybrid)" data-fr="Paris, France (Hybride)">Paris, France (Hybrid)</span></div>
-                        <p class="tl-desc" data-en="Designed and deployed machine learning models for automated risk assessment and anomaly detection using Python, TensorFlow, and scikit-learn. Built end-to-end MLOps pipelines with MLflow and Kubeflow for model versioning, training, and continuous deployment. Developed real-time inference APIs with FastAPI, containerized with Docker and orchestrated on Kubernetes. Implemented model monitoring and data drift detection dashboards using Evidently AI and Grafana." data-fr="Conception et deploiement de modeles de machine learning pour l'evaluation automatisee des risques et la detection d'anomalies avec Python, TensorFlow et scikit-learn. Construction de pipelines MLOps de bout en bout avec MLflow et Kubeflow pour le versioning, l'entrainement et le deploiement continu des modeles. Developpement d'APIs d'inference en temps reel avec FastAPI, conteneurisees avec Docker et orchestrees sur Kubernetes. Implementation de tableaux de bord de monitoring et detection de derive des donnees avec Evidently AI et Grafana.">Designed and deployed machine learning models for automated risk assessment and anomaly detection using Python, TensorFlow, and scikit-learn. Built end-to-end MLOps pipelines with MLflow and Kubeflow for model versioning, training, and continuous deployment. Developed real-time inference APIs with FastAPI, containerized with Docker and orchestrated on Kubernetes. Implemented model monitoring and data drift detection dashboards using Evidently AI and Grafana.</p>
+                        <div class="tl-loc"><i class="fas fa-map-marker-alt"></i> <span data-en="Paris, France" data-fr="Paris, France">Paris, France</span></div>
+                        <p class="tl-desc" data-en="Designed and deployed a multi-agent system (CrewAI + AutoGen) automating product backlog generation, cutting creation time by 70% and producing 50+ user stories/hour. Integrated native DevSecOps pipelines (Trivy, OWASP ZAP, Bandit) into GitLab CI/CD, improving vulnerability detection from the development stage. Built a REST API (FastAPI + MongoDB) with 3 interfaces (CLI, Swagger, browser extension) to orchestrate AI agents and sync Taiga data in real time. Architected an async system with intelligent caching and parallelization, reducing LLM latency by a factor of 3; test coverage: 87%." data-fr="Conception et deploiement d'un systeme multi-agents (CrewAI + AutoGen) automatisant la generation de backlog produit, reduisant le temps de creation de 70% et produisant 50+ user stories/heure. Integration de pipelines DevSecOps natifs (Trivy, OWASP ZAP, Bandit) dans GitLab CI/CD, ameliorant la detection de vulnerabilites des la phase de developpement. Construction d'une API REST (FastAPI + MongoDB) avec 3 interfaces (CLI, Swagger, extension navigateur) pour orchestrer les agents IA et synchroniser les donnees Taiga en temps reel. Architecture d'un systeme asynchrone avec cache intelligent et parallelisation, reduisant la latence LLM d'un facteur 3; couverture de tests: 87%.">Designed and deployed a multi-agent system (CrewAI + AutoGen) automating product backlog generation, cutting creation time by 70% and producing 50+ user stories/hour. Integrated native DevSecOps pipelines (Trivy, OWASP ZAP, Bandit) into GitLab CI/CD, improving vulnerability detection from the development stage. Built a REST API (FastAPI + MongoDB) with 3 interfaces (CLI, Swagger, browser extension) to orchestrate AI agents and sync Taiga data in real time. Architected an async system with intelligent caching and parallelization, reducing LLM latency by a factor of 3; test coverage: 87%.</p>
                         <div class="tl-tags">
                             <span class="tl-tag">Python</span>
-                            <span class="tl-tag">TensorFlow</span>
-                            <span class="tl-tag">MLflow</span>
-                            <span class="tl-tag">Kubeflow</span>
+                            <span class="tl-tag">LangChain</span>
+                            <span class="tl-tag">CrewAI</span>
+                            <span class="tl-tag">AutoGen</span>
                             <span class="tl-tag">FastAPI</span>
+                            <span class="tl-tag">MongoDB</span>
+                            <span class="tl-tag">GitLab CI/CD</span>
                             <span class="tl-tag">Docker</span>
-                            <span class="tl-tag">Kubernetes</span>
+                            <span class="tl-tag">Azure AKS</span>
                         </div>
                     </div>
                 </div>
@@ -496,18 +560,18 @@
                 <div class="tl-item reveal">
                     <div class="tl-dot"></div>
                     <div class="tl-card">
-                        <div class="tl-date">May 2024 &mdash; Sep 2024</div>
-                        <div class="tl-role" data-en="Software Engineer & DevOps" data-fr="Ingenieur Logiciel & DevOps">Software Engineer & DevOps</div>
+                        <div class="tl-date">May 2024 &mdash; Aug 2024</div>
+                        <div class="tl-role" data-en="Backend Software Engineer" data-fr="Ingenieur Logiciel Backend">Backend Software Engineer</div>
                         <div class="tl-company">Axe Finance</div>
-                        <div class="tl-loc"><i class="fas fa-map-marker-alt"></i> <span data-en="Tunis, Tunisia (On-site)" data-fr="Tunis, Tunisie (Sur site)">Tunis, Tunisia (On-site)</span></div>
-                        <p class="tl-desc" data-en="Architected and developed microservices-based lending platform features using Spring Boot and Angular. Designed RESTful APIs with OAuth2 authentication, rate limiting, and comprehensive Swagger documentation. Built automated CI/CD pipelines with Azure DevOps integrating code quality gates via SonarQube. Containerized applications with Docker and orchestrated deployments on Azure Kubernetes Service. Automated infrastructure provisioning using Terraform and improved cloud security with Microsoft Entra ID and Azure Policy." data-fr="Architecture et developpement de fonctionnalites de plateforme de pret basees sur des microservices avec Spring Boot et Angular. Conception d'APIs RESTful avec authentification OAuth2, limitation de debit et documentation Swagger. Construction de pipelines CI/CD automatises avec Azure DevOps integrant des portes de qualite code via SonarQube. Conteneurisation des applications avec Docker et orchestration des deploiements sur Azure Kubernetes Service. Automatisation du provisionnement d'infrastructure avec Terraform et amelioration de la securite cloud avec Microsoft Entra ID et Azure Policy.">Architected and developed microservices-based lending platform features using Spring Boot and Angular. Designed RESTful APIs with OAuth2 authentication, rate limiting, and comprehensive Swagger documentation. Built automated CI/CD pipelines with Azure DevOps integrating code quality gates via SonarQube. Containerized applications with Docker and orchestrated deployments on Azure Kubernetes Service. Automated infrastructure provisioning using Terraform and improved cloud security with Microsoft Entra ID and Azure Policy.</p>
+                        <div class="tl-loc"><i class="fas fa-map-marker-alt"></i> <span data-en="Tunis, Tunisia" data-fr="Tunis, Tunisie">Tunis, Tunisia</span></div>
+                        <p class="tl-desc" data-en="Developed and maintained critical backend features for enterprise financial applications (credit management, regulatory reporting). Optimized GitLab CI/CD pipelines and automated internal workflows via Python scripts, reducing repetitive manual tasks by 40%." data-fr="Developpement et maintenance de fonctionnalites backend critiques pour applications financieres d'entreprise (gestion de credit, reporting reglementaire). Optimisation des pipelines GitLab CI/CD et automatisation des workflows internes via scripts Python, reduisant les taches manuelles repetitives de 40%.">Developed and maintained critical backend features for enterprise financial applications (credit management, regulatory reporting). Optimized GitLab CI/CD pipelines and automated internal workflows via Python scripts, reducing repetitive manual tasks by 40%.</p>
                         <div class="tl-tags">
+                            <span class="tl-tag">Java</span>
                             <span class="tl-tag">Spring Boot</span>
-                            <span class="tl-tag">Angular</span>
-                            <span class="tl-tag">Azure DevOps</span>
+                            <span class="tl-tag">Python</span>
+                            <span class="tl-tag">GitLab CI/CD</span>
                             <span class="tl-tag">Docker</span>
-                            <span class="tl-tag">Terraform</span>
-                            <span class="tl-tag">Kubernetes</span>
+                            <span class="tl-tag">PostgreSQL</span>
                         </div>
                     </div>
                 </div>
@@ -516,18 +580,18 @@
                 <div class="tl-item reveal">
                     <div class="tl-dot"></div>
                     <div class="tl-card">
-                        <div class="tl-date">Jan 2023 &mdash; Jun 2023</div>
-                        <div class="tl-role" data-en="Software Engineer & DevOps" data-fr="Ingenieur Logiciel & DevOps">Software Engineer & DevOps</div>
+                        <div class="tl-date">Jan 2022 &mdash; Jul 2022</div>
+                        <div class="tl-role" data-en="Application Developer" data-fr="Developpeur d'Applications">Application Developer</div>
                         <div class="tl-company">BIAT Innovation & Technology</div>
-                        <div class="tl-loc"><i class="fas fa-map-marker-alt"></i> <span data-en="Tunis, Tunisia (On-site)" data-fr="Tunis, Tunisie (Sur site)">Tunis, Tunisia (On-site)</span></div>
-                        <p class="tl-desc" data-en="Developed core banking web application modules using Spring Boot microservices architecture with Angular frontend. Implemented comprehensive automated testing frameworks using JUnit, Mockito, and Selenium for end-to-end testing coverage. Set up CI/CD pipelines with Jenkins integrating SonarQube for code quality enforcement and automated deployments. Designed and deployed containerized development environments using Docker Compose, standardizing the team's local development workflow." data-fr="Developpement de modules d'application bancaire web avec une architecture microservices Spring Boot et frontend Angular. Implementation de frameworks de tests automatises complets avec JUnit, Mockito et Selenium pour la couverture de tests de bout en bout. Mise en place de pipelines CI/CD avec Jenkins integrant SonarQube pour le controle qualite du code et les deploiements automatises. Conception et deploiement d'environnements de developpement conteneurises avec Docker Compose, standardisant le workflow de developpement local de l'equipe.">Developed core banking web application modules using Spring Boot microservices architecture with Angular frontend. Implemented comprehensive automated testing frameworks using JUnit, Mockito, and Selenium for end-to-end testing coverage. Set up CI/CD pipelines with Jenkins integrating SonarQube for code quality enforcement and automated deployments. Designed and deployed containerized development environments using Docker Compose, standardizing the team's local development workflow.</p>
+                        <div class="tl-loc"><i class="fas fa-map-marker-alt"></i> <span data-en="Tunis, Tunisia" data-fr="Tunis, Tunisie">Tunis, Tunisia</span></div>
+                        <p class="tl-desc" data-en="Developed high-availability banking application modules; contributed to automated testing (JUnit, Selenium) and CI pipeline improvements with Jenkins." data-fr="Developpement de modules d'application bancaire haute disponibilite; contribution aux tests automatises (JUnit, Selenium) et ameliorations des pipelines CI avec Jenkins.">Developed high-availability banking application modules; contributed to automated testing (JUnit, Selenium) and CI pipeline improvements with Jenkins.</p>
                         <div class="tl-tags">
+                            <span class="tl-tag">Java</span>
                             <span class="tl-tag">Spring Boot</span>
-                            <span class="tl-tag">Angular</span>
+                            <span class="tl-tag">JUnit</span>
+                            <span class="tl-tag">Maven</span>
                             <span class="tl-tag">Jenkins</span>
                             <span class="tl-tag">Docker</span>
-                            <span class="tl-tag">SonarQube</span>
-                            <span class="tl-tag">JUnit</span>
                         </div>
                     </div>
                 </div>
@@ -623,111 +687,69 @@
             <div class="projects-scroll">
                 <div class="project-card reveal">
                     <div class="project-img-wrap">
-                        <img class="project-img" src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop" alt="ML Pipeline" />
+                        <img class="project-img" src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop" alt="Taiga Agent" />
                     </div>
                     <div class="project-body">
-                        <div class="project-cat">AI / MLOps</div>
-                        <h3>ML Risk Assessment Pipeline</h3>
-                        <p>End-to-end machine learning pipeline for automated risk scoring with MLflow tracking, Kubeflow orchestration, and real-time FastAPI inference.</p>
-                        <a href="https://github.com/chihebkitar" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
+                        <div class="project-cat">AI / Multi-Agent</div>
+                        <h3>Taiga Agent (FYP)</h3>
+                        <p>Multi-agent system (CrewAI + AutoGen + FastAPI + K8s) — 5 agents, 95% consistency, deployed on Azure AKS.</p>
+                        <a href="#contact" class="project-link">Request Demo <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="project-card reveal reveal-delay-1">
                     <div class="project-img-wrap">
-                        <img class="project-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop" alt="Banking App" />
+                        <img class="project-img" src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=600&h=400&fit=crop" alt="Semantic Search" />
                     </div>
                     <div class="project-body">
-                        <div class="project-cat">Full-Stack</div>
-                        <h3>Banking Web Application</h3>
-                        <p>Full-stack Spring Boot + Angular app with JWT authentication, microservices architecture, and comprehensive REST APIs.</p>
-                        <a href="https://github.com/chihebkitar" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
+                        <div class="project-cat">AI / RAG</div>
+                        <h3>Semantic Wikipedia Search</h3>
+                        <p>Hybrid RAG pipeline with re-ranking over 100+ Wikipedia articles (Python, LangChain, FAISS).</p>
+                        <a href="https://github.com/KitarChiheb/semantic-wikipedia-search" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="project-card reveal reveal-delay-2">
                     <div class="project-img-wrap">
-                        <img class="project-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop" alt="AI Automation" />
+                        <img class="project-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop" alt="Chat API" />
                     </div>
                     <div class="project-body">
-                        <div class="project-cat">AI / Automation</div>
-                        <h3>AI-Driven Security Automation</h3>
-                        <p>Intelligent agents for automated security scanning in CI/CD pipelines with anomaly detection and auto-remediation.</p>
-                        <a href="https://github.com/chihebkitar" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
+                        <div class="project-cat">AI / API</div>
+                        <h3>Optimized Chat API</h3>
+                        <p>Streamed API, Redis cache, multi-LLM fallback (GPT-4 → Claude → Local), Prometheus — latency −35%.</p>
+                        <a href="https://github.com/KitarChiheb/optimized-chat-api" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="project-card reveal">
                     <div class="project-img-wrap">
-                        <img class="project-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" alt="Dashboard" />
+                        <img class="project-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop" alt="AI Marketing" />
                     </div>
                     <div class="project-body">
-                        <div class="project-cat">Full-Stack</div>
-                        <h3>Financial Analytics Dashboard</h3>
-                        <p>React + Node.js real-time dashboard with interactive data visualization, WebSocket feeds, and predictive analytics.</p>
-                        <a href="https://github.com/chihebkitar" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
+                        <div class="project-cat">AI / Automation</div>
+                        <h3>AI Marketing Agency</h3>
+                        <p>Autonomous agents (CrewAI + OpenRouter): research → writing → revision of marketing content.</p>
+                        <a href="#contact" class="project-link">Request Demo <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="project-card reveal reveal-delay-1">
                     <div class="project-img-wrap">
-                        <img class="project-img" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop" alt="Cloud Infra" />
+                        <img class="project-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&h=400&fit=crop" alt="Observable AI" />
                     </div>
                     <div class="project-body">
-                        <div class="project-cat">Cloud / DevOps</div>
-                        <h3>Azure Cloud Infrastructure</h3>
-                        <p>Complete IaaS/PaaS environment with Terraform IaC, automated provisioning, and multi-region failover architecture.</p>
-                        <a href="https://github.com/chihebkitar" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
+                        <div class="project-cat">MLOps / Observability</div>
+                        <h3>Observable AI Chatbot</h3>
+                        <p>Observability, Prometheus, Grafana & Monitoring AI Systems with comprehensive metrics tracking.</p>
+                        <a href="https://github.com/KitarChiheb/observable-ai-chatbot" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="project-card reveal reveal-delay-2">
                     <div class="project-img-wrap">
-                        <img class="project-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&h=400&fit=crop" alt="K8s Platform" />
+                        <img class="project-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" alt="Production RAG" />
                     </div>
                     <div class="project-body">
-                        <div class="project-cat">DevOps</div>
-                        <h3>K8s Microservices Platform</h3>
-                        <p>Production-grade Kubernetes platform with Helm charts, Istio service mesh, and GitOps-driven deployments.</p>
-                        <a href="https://github.com/chihebkitar" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
+                        <div class="project-cat">AI / RAG</div>
+                        <h3>Production RAG Pipeline</h3>
+                        <p>Production-grade RAG implementation with LangChain for document Q&A and knowledge retrieval.</p>
+                        <a href="https://github.com/KitarChiheb/production-rag-pipeline-langchain" target="_blank" class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></a>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== EDUCATION ==================== -->
-    <section id="education" class="edu-section">
-        <div class="container">
-            <div class="section-header reveal">
-                <div class="section-label" data-en="Education" data-fr="Formation">Education</div>
-                <h2 data-en="Academic <span class='grad'>Journey</span>" data-fr="Parcours <span class='grad'>Academique</span>">Academic <span class="grad">Journey</span></h2>
-            </div>
-            <div class="edu-grid">
-                <div class="edu-card reveal">
-                    <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
-                    <div class="edu-info">
-                        <h3 data-en="Master's Degree" data-fr="Master">Master's Degree</h3>
-                        <div class="school">Universit&eacute; Paris-Saclay</div>
-                        <div class="field" data-en="Network Engineering and Systems" data-fr="Ingenierie des Reseaux et des Systemes">Network Engineering and Systems</div>
-                        <div class="edu-desc" data-en="Specialized training in network infrastructure, cloud systems, and DevOps practices. Focus on scalable architectures and modern infrastructure management." data-fr="Formation specialisee en infrastructure reseau, systemes cloud et pratiques DevOps. Focus sur les architectures evolutives et la gestion d'infrastructure moderne.">Specialized training in network infrastructure, cloud systems, and DevOps practices. Focus on scalable architectures and modern infrastructure management.</div>
-                    </div>
-                    <span class="edu-year">2024 - 2025</span>
-                </div>
-                <div class="edu-card reveal reveal-delay-1">
-                    <div class="edu-icon"><i class="fas fa-code"></i></div>
-                    <div class="edu-info">
-                        <h3 data-en="Engineering Diploma" data-fr="Diplome d'Ingenieur">Engineering Diploma</h3>
-                        <div class="school">ESPRIT Tunis</div>
-                        <div class="field" data-en="Software Engineering" data-fr="Genie Logiciel">Software Engineering</div>
-                        <div class="edu-desc" data-en="Comprehensive software engineering program covering full-stack development, software architecture, agile methodologies, and modern development practices." data-fr="Programme complet en genie logiciel couvrant le developpement full-stack, l'architecture logicielle, les methodologies agiles et les pratiques de developpement modernes.">Comprehensive software engineering program covering full-stack development, software architecture, agile methodologies, and modern development practices.</div>
-                    </div>
-                    <span class="edu-year">2022 - 2025</span>
-                </div>
-                <div class="edu-card reveal reveal-delay-2">
-                    <div class="edu-icon"><i class="fas fa-plane-departure"></i></div>
-                    <div class="edu-info">
-                        <h3 data-en="Exchange Semester" data-fr="Semestre d'Echange">Exchange Semester</h3>
-                        <div class="school">ISEP Paris</div>
-                        <div class="field" data-en="Computer Software Engineering" data-fr="Genie Logiciel Informatique">Computer Software Engineering</div>
-                        <div class="edu-desc" data-en="International exchange program focusing on advanced software engineering topics and European tech industry practices." data-fr="Programme d'echange international axe sur des sujets avances en genie logiciel et les pratiques de l'industrie technologique europeenne.">International exchange program focusing on advanced software engineering topics and European tech industry practices.</div>
-                    </div>
-                    <span class="edu-year">2024</span>
                 </div>
             </div>
         </div>
@@ -742,18 +764,30 @@
             </div>
             <div class="cert-grid">
                 <div class="cert-card reveal">
-                    <div class="cert-icon"><i class="fas fa-certificate"></i></div>
-                    <h3>IBM Z Xplore</h3>
+                    <div class="cert-icon"><i class="fab fa-google"></i></div>
+                    <h3>Google Cloud Document AI</h3>
+                    <div class="cert-org">Google Cloud &bull; 2026</div>
+                    <div class="cert-desc" data-en="Automate Data Capture at Scale" data-fr="Automatiser la Capture de Donnees a Grande Echelle">Automate Data Capture at Scale</div>
+                </div>
+                <div class="cert-card reveal reveal-delay-1">
+                    <div class="cert-icon"><i class="fas fa-server"></i></div>
+                    <h3>IBM Z Xplore - Concepts</h3>
                     <div class="cert-org">IBM &bull; 2025</div>
                     <div class="cert-desc" data-en="Mainframe Concepts" data-fr="Concepts Mainframe">Mainframe Concepts</div>
                 </div>
-                <div class="cert-card reveal reveal-delay-1">
+                <div class="cert-card reveal reveal-delay-2">
+                    <div class="cert-icon"><i class="fab fa-linux"></i></div>
+                    <h3>Linux Unhatched</h3>
+                    <div class="cert-org">Cisco &bull; 2025</div>
+                    <div class="cert-desc" data-en="Network Essentials" data-fr="Essentiels Reseau">Network Essentials</div>
+                </div>
+                <div class="cert-card reveal">
                     <div class="cert-icon"><i class="fas fa-language"></i></div>
                     <h3>TOEFL iBT</h3>
                     <div class="cert-org">ETS &bull; 2024</div>
                     <div class="cert-desc" data-en="English Proficiency" data-fr="Maitrise de l'Anglais">English Proficiency</div>
                 </div>
-                <div class="cert-card reveal reveal-delay-2">
+                <div class="cert-card reveal reveal-delay-1">
                     <div class="cert-icon"><i class="fas fa-network-wired"></i></div>
                     <h3>CCNA</h3>
                     <div class="cert-org">Cisco &bull; 2023</div>
@@ -781,7 +815,7 @@
                     </div>
                     <div class="c-item">
                         <div class="c-icon"><i class="fas fa-phone"></i></div>
-                        <div class="c-text"><h4>Phone</h4><p>+216 21 304 666</p></div>
+                        <div class="c-text"><h4>Phone</h4><p>+216 21 304 666 / +33 7 75 70 60 00</p></div>
                     </div>
                     <div class="c-item">
                         <div class="c-icon"><i class="fas fa-map-marker-alt"></i></div>
@@ -789,29 +823,29 @@
                     </div>
                     <div class="socials">
                         <a href="https://linkedin.com/in/chiheb-kitar-06512619a" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="https://github.com/chihebkitar" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://github.com/KitarChiheb" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
                         <a href="mailto:kitarchiheb11@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
                 <div class="contact-form reveal reveal-delay-1">
-                    <form id="contactForm">
+                    <form id="contactForm" action="https://formspree.io/f/xanyqwbd" method="POST">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="name">Your Name</label>
-                                <input type="text" id="name" class="form-control" placeholder="John Doe" required />
+                                <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required />
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" class="form-control" placeholder="john@example.com" required />
+                                <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject</label>
-                            <input type="text" id="subject" class="form-control" placeholder="Project Discussion" />
+                            <input type="text" id="subject" name="subject" class="form-control" placeholder="Project Discussion" />
                         </div>
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea id="message" class="form-control" placeholder="Tell me about your project..." required></textarea>
+                            <textarea id="message" name="message" class="form-control" placeholder="Tell me about your project..." required></textarea>
                         </div>
                         <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
                     </form>
@@ -955,6 +989,38 @@
     }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    // === THEME TOGGLE ===
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    let currentTheme = 'light';
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        html.setAttribute('data-theme', theme);
+        const icon = themeToggle.querySelector('i');
+        if (theme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+        localStorage.setItem('preferred-theme', theme);
+    }
+
+    function toggleTheme() {
+        setTheme(currentTheme === 'light' ? 'dark' : 'light');
+    }
+
+    const savedTheme = localStorage.getItem('preferred-theme');
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else {
+        setTheme('light');
+    }
+    
+    themeToggle.addEventListener('click', toggleTheme);
+
     // === LANGUAGE TOGGLE ===
     let currentLang = 'en';
     const langToggle = document.getElementById('langToggle');
@@ -988,16 +1054,45 @@
     });
 
     // === FORM SUBMIT ===
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const btn = this.querySelector('.submit-btn');
-        btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-            btn.style.background = '';
-            this.reset();
-        }, 3000);
+        const originalHTML = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        btn.disabled = true;
+        
+        try {
+            const formData = new FormData(this);
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                this.reset();
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                }, 3000);
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch (error) {
+            btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed. Try again?';
+            btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = '';
+                btn.disabled = false;
+            }, 3000);
+        }
     });
 
     // === TYPEWRITER EFFECT ===
@@ -1011,6 +1106,289 @@
             if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(type, 60); }
         }
         setTimeout(type, 1200);
+    })();
+    </script>
+
+    <!-- ==================== AI CAREER ASSISTANT ==================== -->
+    <div class="ai-chat-widget">
+        <div class="chat-bubble" id="chatBubble">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div class="chat-header-title">
+                    <i class="fas fa-robot"></i>
+                    <div>
+                        <h3>Career AI Assistant</h3>
+                        <p>Ask me about Chiheb's experience</p>
+                    </div>
+                </div>
+                <button class="chat-close" id="chatClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message">
+                    <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+                    <div class="chat-bubble-text">
+                        Hi! I'm Chiheb's AI Career Assistant. I can answer questions about his experience, projects, skills, and how he can contribute to your team. What would you like to know?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-suggestions" id="chatSuggestions">
+                <div class="suggestion-chip" data-suggestion="Tell me about your MLOps experience">MLOps Experience</div>
+                <div class="suggestion-chip" data-suggestion="What AI projects have you built?">AI Projects</div>
+                <div class="suggestion-chip" data-suggestion="Explain your multi-agent system at BNP">Multi-Agent System</div>
+                <div class="suggestion-chip" data-suggestion="What DevSecOps tools do you use?">DevSecOps Skills</div>
+            </div>
+            <div class="chat-input-area">
+                <textarea class="chat-input" id="chatInput" placeholder="Ask about experience, skills, projects..." rows="1"></textarea>
+                <button class="chat-send" id="chatSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // === AI CAREER ASSISTANT CHATBOT ===
+    (function() {
+        const API_KEY = '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';
+        const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+        
+        // Free model fallback chain (5 models)
+        const FREE_MODELS = [
+            'nvidia/nemotron-3-super-120b-a12b:free',
+            'meta-llama/llama-3.3-70b-instruct:free',
+            'arcee-ai/trinity-large-preview:free',
+            'mistralai/mistral-small-3.1-24b:free',
+            'qwen/qwen-3-next-80b-a3b-instruct:free'
+        ];
+
+        const chatBubble = document.getElementById('chatBubble');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatClose = document.getElementById('chatClose');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const chatSuggestions = document.getElementById('chatSuggestions');
+
+        let conversationHistory = [];
+        let currentModelIndex = 0;
+
+        // Career knowledge base
+        const CAREER_CONTEXT = `You are Chiheb Kitar's AI Career Assistant. You help recruiters and potential employers learn about Chiheb's professional background.
+
+PROFILE:
+- AI & MLOps Engineer specializing in generative AI, multi-agent systems, and DevSecOps
+- Built a backlog automation system that cuts creation time by 70%
+- Expert in LangChain, LlamaIndex, CrewAI, AutoGen, FastAPI, Docker, Kubernetes, GitLab CI/CD
+- Located in Tunis, Tunisia and Paris, France
+
+EXPERIENCE:
+1. BNP Paribas (Apr 2025 - Oct 2025) - AI & Automation Engineer — DevSecOps Workflows
+   - Designed multi-agent system (CrewAI + AutoGen) automating product backlog generation (70% time reduction, 50+ user stories/hour)
+   - Integrated DevSecOps pipelines (Trivy, OWASP ZAP, Bandit) into GitLab CI/CD
+   - Built REST API (FastAPI + MongoDB) with 3 interfaces (CLI, Swagger, browser extension)
+   - Architected async system with intelligent caching, reducing LLM latency by 3x (87% test coverage)
+   - Tech: Python, LangChain, CrewAI, AutoGen, FastAPI, MongoDB, GitLab CI/CD, Docker, Azure AKS
+
+2. Axe Finance (May 2024 - Aug 2024) - Backend Software Engineer
+   - Developed critical backend features for enterprise financial applications (credit management, regulatory reporting)
+   - Optimized GitLab CI/CD pipelines and automated workflows via Python scripts (40% reduction in manual tasks)
+   - Tech: Java, Spring Boot, Python, GitLab CI/CD, Docker, PostgreSQL
+
+3. BIAT Innovation & Technology (Jan 2022 - Jul 2022) - Application Developer
+   - Developed high-availability banking application modules
+   - Contributed to automated testing (JUnit, Selenium) and CI pipeline improvements with Jenkins
+   - Tech: Java, Spring Boot, JUnit, Maven, Jenkins, Docker
+
+KEY PROJECTS:
+- Taiga Agent (FYP): Multi-agent system with 5 agents, 95% consistency, deployed on Azure AKS
+- Semantic Wikipedia Search: Hybrid RAG pipeline with re-ranking over 100+ articles
+- Optimized Chat API: Streamed API with Redis cache, multi-LLM fallback, 35% latency reduction
+- AI Marketing Agency: Autonomous agents for content generation
+- Observable AI Chatbot: Prometheus & Grafana monitoring for AI systems
+- Production RAG Pipeline: LangChain implementation for document Q&A
+
+SKILLS:
+- LLM & AI: LangChain, LlamaIndex, CrewAI, AutoGen, DSPy, OpenAI API, Anthropic API, Ollama, vLLM, PEFT, TRL
+- MLOps: MLflow, DVC, Kubeflow, Weights & Biases, BentoML, ONNX, Triton, ZenML, Prefect
+- Backend: Python 3.11+, FastAPI, Pydantic, Poetry, Java, Spring Boot, Node.js
+- Databases: MongoDB, PostgreSQL, Redis, Pinecone, ChromaDB, Weaviate, FAISS, Qdrant
+- DevSecOps: Docker, Kubernetes (AKS), GitLab CI/CD, GitHub Actions, Trivy, OWASP ZAP, Bandit, ArgoCD
+- Cloud: Azure, AWS, GCP, Terraform, Helm, Prometheus, Grafana, LangFuse
+
+CERTIFICATIONS:
+- Google Cloud Document AI (2026)
+- IBM Z Xplore - Concepts (2025)
+- Linux Unhatched (2025)
+- TOEFL iBT (2024)
+- CCNA (2023)
+
+CONTACT:
+- Email: kitarchiheb11@gmail.com
+- Phone: +216 21 304 666 / +33 7 75 70 60 00
+- LinkedIn: linkedin.com/in/chiheb-kitar-06512619a
+- GitHub: github.com/KitarChiheb
+
+Answer questions naturally and professionally. Highlight relevant achievements and provide specific examples. If asked about fit for a role, connect Chiheb's experience to the requirements.`;
+
+        // Toggle chat window
+        chatBubble.addEventListener('click', () => {
+            chatWindow.classList.toggle('open');
+            if (chatWindow.classList.contains('open')) {
+                chatInput.focus();
+            }
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+        });
+
+        // Handle suggestions
+        chatSuggestions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('suggestion-chip')) {
+                const suggestion = e.target.getAttribute('data-suggestion');
+                chatInput.value = suggestion;
+                sendMessage();
+            }
+        });
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Send on Enter (Shift+Enter for new line)
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        chatSend.addEventListener('click', sendMessage);
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
+            messageDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <i class="fas fa-${isUser ? 'user' : 'robot'}"></i>
+                </div>
+                <div class="chat-bubble-text">${content}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-typing';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chat-bubble-text">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        async function callOpenRouter(userMessage, modelIndex = 0) {
+            if (modelIndex >= FREE_MODELS.length) {
+                throw new Error('All models failed');
+            }
+
+            const model = FREE_MODELS[modelIndex];
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'HTTP-Referer': window.location.href,
+                        'X-Title': 'Chiheb Kitar Portfolio'
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            { role: 'system', content: CAREER_CONTEXT },
+                            ...conversationHistory,
+                            { role: 'user', content: userMessage }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+
+                if (!response.ok) {
+                    if (response.status === 429 || response.status === 503) {
+                        // Rate limit or service unavailable, try next model
+                        console.log(`Model ${model} failed, trying next...`);
+                        return await callOpenRouter(userMessage, modelIndex + 1);
+                    }
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                currentModelIndex = modelIndex; // Remember working model
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error(`Error with model ${model}:`, error);
+                // Try next model in fallback chain
+                if (modelIndex < FREE_MODELS.length - 1) {
+                    return await callOpenRouter(userMessage, modelIndex + 1);
+                }
+                throw error;
+            }
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, true);
+            conversationHistory.push({ role: 'user', content: message });
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            chatSend.disabled = true;
+
+            // Show typing indicator
+            showTyping();
+
+            try {
+                // Call OpenRouter with fallback mechanism
+                const response = await callOpenRouter(message, currentModelIndex);
+                
+                hideTyping();
+                addMessage(response);
+                conversationHistory.push({ role: 'assistant', content: response });
+            } catch (error) {
+                hideTyping();
+                addMessage('I apologize, but I\'m having trouble connecting right now. Please try asking your question again, or feel free to contact Chiheb directly at kitarchiheb11@gmail.com.');
+                console.error('Chat error:', error);
+            } finally {
+                chatSend.disabled = false;
+                chatInput.focus();
+            }
+        }
     })();
     </script>
 </body>
