@@ -37,7 +37,7 @@ jobs:
     - name: Link check with exclusions
       uses: lycheeverse/lychee-action@v2
       with:
-        args: --verbose --no-progress --exclude 'linkedin.com' --exclude 'formspree.io' --accept '200,404,405,999' --include-mail './**/*.html'
+        args: --verbose --no-progress --exclude 'linkedin.com' --exclude 'formspree.io' --include-mail './**/*.html'
         fail: false
         
     - name: Check for sensitive data
