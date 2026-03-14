@@ -1,0 +1,22 @@
+{
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "OPENROUTER_API_KEY": "@openrouter-api-key"
+  },
+  "functions": {
+    "index.html": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}

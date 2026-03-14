@@ -14,6 +14,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         :root {
+            /* Light mode (default) */
+            --bg: #f8fafc;
+            --bg-card: rgba(255,255,255,0.9);
+            --bg-glass: rgba(255,255,255,0.7);
+            --border: rgba(0,0,0,0.08);
+            --cyan: #0ea5e9;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+            --text: #1e293b;
+            --muted: #64748b;
+            --dim: #94a3b8;
+            --radius: 16px;
+            --font: 'Space Grotesk', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        
+        /* Dark mode override */
+        [data-theme="dark"] {
             --bg: #08080c;
             --bg-card: rgba(255,255,255,0.03);
             --bg-glass: rgba(255,255,255,0.05);
@@ -24,9 +42,6 @@
             --text: #e2e8f0;
             --muted: #94a3b8;
             --dim: #475569;
-            --radius: 16px;
-            --font: 'Space Grotesk', sans-serif;
-            --mono: 'JetBrains Mono', monospace;
         }
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--cyan) var(--bg); }
@@ -828,7 +843,7 @@
                     </div>
                 </div>
                 <div class="contact-form reveal reveal-delay-1">
-                    <form id="contactForm" action="https://formspree.io/f/xanyqwbd" method="POST">
+                    <form id="contactForm" action="https://formspree.io/f/mkndzqvl" method="POST">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="name">Your Name</label>
@@ -996,14 +1011,14 @@
 
     function setTheme(theme) {
         currentTheme = theme;
-        html.setAttribute('data-theme', theme);
-        const icon = themeToggle.querySelector('i');
         if (theme === 'dark') {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
+            html.setAttribute('data-theme', 'dark');
+            themeToggle.querySelector('i').classList.remove('fa-moon');
+            themeToggle.querySelector('i').classList.add('fa-sun');
         } else {
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
+            html.removeAttribute('data-theme');
+            themeToggle.querySelector('i').classList.remove('fa-sun');
+            themeToggle.querySelector('i').classList.add('fa-moon');
         }
         localStorage.setItem('preferred-theme', theme);
     }
@@ -1012,11 +1027,12 @@
         setTheme(currentTheme === 'light' ? 'dark' : 'light');
     }
 
+    // Initialize theme
     const savedTheme = localStorage.getItem('preferred-theme');
-    if (savedTheme) {
-        setTheme(savedTheme);
+    if (savedTheme && savedTheme === 'dark') {
+        setTheme('dark');
     } else {
-        setTheme('light');
+        setTheme('light'); // Default to light mode
     }
     
     themeToggle.addEventListener('click', toggleTheme);
@@ -1153,7 +1169,7 @@
     <script>
     // === AI CAREER ASSISTANT CHATBOT ===
     (function() {
-        const API_KEY = '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';
+        const API_KEY = process.env.OPENROUTER_API_KEY || window.OPENROUTER_API_KEY || '';
         const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
         
         // Free model fallback chain (5 models)
@@ -1372,6 +1388,15 @@ Answer questions naturally and professionally. Highlight relevant achievements a
 
             // Show typing indicator
             showTyping();
+
+            // Check if API key is available
+            if (!API_KEY) {
+                hideTyping();
+                addMessage('The AI assistant is currently unavailable. Please contact Chiheb directly at kitarchiheb11@gmail.com or check back later.');
+                chatSend.disabled = false;
+                chatInput.focus();
+                return;
+            }
 
             try {
                 // Call OpenRouter with fallback mechanism
