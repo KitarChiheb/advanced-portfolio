@@ -113,7 +113,7 @@ jobs:
           vercel-args: '--prod'
 
       - name: Notify Success on Discord
-        if: success() && secrets.DISCORD_WEBHOOK != ''
+        if: success()
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
@@ -121,7 +121,7 @@ jobs:
           "${{ secrets.DISCORD_WEBHOOK }}"
 
       - name: Notify Failure on Discord
-        if: failure() && secrets.DISCORD_WEBHOOK != ''
+        if: failure()
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
