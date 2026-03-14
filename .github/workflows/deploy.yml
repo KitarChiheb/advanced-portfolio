@@ -113,17 +113,17 @@ jobs:
           vercel-args: '--prod'
 
       - name: Notify Success on Discord
-        if: success()
+        if: success() && secrets.DISCORD_WEBHOOK != ''
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
           -d "{\"content\": \"✅ **Deployment Successful**\nSite: https://chiheb-kitar-portfolio.vercel.app/\nCommit: $GITHUB_SHA\"}" \
-          ${{ secrets.DISCORD_WEBHOOK }}
+          "${{ secrets.DISCORD_WEBHOOK }}"
 
       - name: Notify Failure on Discord
-        if: failure()
+        if: failure() && secrets.DISCORD_WEBHOOK != ''
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
           -d "{\"content\": \"❌ **Deployment FAILED**\nCommit: $GITHUB_SHA\"}" \
-          ${{ secrets.DISCORD_WEBHOOK }}
+          "${{ secrets.DISCORD_WEBHOOK }}"
