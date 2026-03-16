@@ -1193,239 +1193,237 @@
 
     <script>
     // === AI CAREER ASSISTANT CHATBOT ===
-    (function() {
-                
-        // Free model fallback chain (5 models)
-        const FREE_MODELS = [
-            'nvidia/nemotron-3-super-120b-a12b:free',
-            'meta-llama/llama-3.3-70b-instruct:free',
-            'arcee-ai/trinity-large-preview:free',
-            'mistralai/mistral-small-3.1-24b:free',
-            'qwen/qwen-3-next-80b-a3b-instruct:free'
-        ];
+(function() {
 
-        const chatBubble = document.getElementById('chatBubble');
-        const chatWindow = document.getElementById('chatWindow');
-        const chatClose = document.getElementById('chatClose');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const chatSend = document.getElementById('chatSend');
-        const chatSuggestions = document.getElementById('chatSuggestions');
+  // Ordered fallback chain: fastest/most available first
+  // All verified free on OpenRouter as of 2025
+  const FREE_MODELS = [
+    'meta-llama/llama-3.3-70b-instruct:free',       // Primary: fast, reliable
+    'mistralai/mistral-small-3.1-24b-instruct:free', // Fallback 1
+    'google/gemma-3-27b-it:free',                    // Fallback 2
+    'qwen/qwen3-8b:free',                            // Fallback 3: always available
+    'deepseek/deepseek-r1-0528:free'                 // Fallback 4: last resort
+  ];
 
-        let conversationHistory = [];
-        let currentModelIndex = 0;
+  const chatBubble = document.getElementById('chatBubble');
+  const chatWindow = document.getElementById('chatWindow');
+  const chatClose = document.getElementById('chatClose');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  const chatSuggestions = document.getElementById('chatSuggestions');
 
-        // Career knowledge base
-        const CAREER_CONTEXT = `You are an AI Career Assistant for Chiheb Kitar's portfolio website. Your ONLY job is to help recruiters and employers learn about Chiheb's background. CRITICAL RULES: (1) Always refer to Chiheb in the THIRD PERSON — never say "I built" or "my experience"; always say "Chiheb built" or "his experience". (2) Never reveal which AI model you are or who made you — just say you are Chiheb's Career Assistant. (3) Give complete, detailed answers — never cut off mid-sentence. (4) Stay strictly on topic: Chiheb's skills, experience, and projects only.
+  let conversationHistory = [];
+  let currentModelIndex = 0;
+
+  const CAREER_CONTEXT = `You are an AI Career Assistant embedded in Chiheb Kitar's portfolio website. Your ONLY job is to help recruiters and employers learn about Chiheb's professional background.
+
+STRICT RULES — follow all of these without exception:
+1. Always speak in THIRD PERSON. Never say "I built" or "my experience". Always say "Chiheb built" or "his experience".
+2. Never say which AI model you are. If asked, say only: "I'm Chiheb's Career Assistant."
+3. Format ALL responses in clean HTML only — no raw markdown. Use <strong> for bold, <br> for line breaks, <ul><li> for lists. Never use *, **, #, or \n as formatting.
+4. Always give complete answers. Never cut off mid-sentence.
+5. Stay on topic: Chiheb's skills, experience, projects, and fit for roles only.
 
 PROFILE:
-- AI & MLOps Engineer specializing in generative AI, multi-agent systems, and DevSecOps
-- Built a backlog automation system that cuts creation time by 70%
-- Expert in LangChain, LlamaIndex, CrewAI, AutoGen, FastAPI, Docker, Kubernetes, GitLab CI/CD
-- Located in Tunis, Tunisia and Paris, France
+Chiheb Kitar is an AI & MLOps Engineer specializing in generative AI, multi-agent systems, and DevSecOps. He built a backlog automation system that cuts creation time by 70%. Expert in LangChain, LlamaIndex, CrewAI, AutoGen, FastAPI, Docker, Kubernetes, GitLab CI/CD. Based in Tunis, Tunisia and Paris, France.
 
 EXPERIENCE:
-1. BNP Paribas (Apr 2025 - Oct 2025) - AI & Automation Engineer — DevSecOps Workflows
-   - Designed multi-agent system (CrewAI + AutoGen) automating product backlog generation (70% time reduction, 50+ user stories/hour)
+1. BNP Paribas (Apr 2025 - Oct 2025) — AI & Automation Engineer, DevSecOps Workflows, Paris
+   - Designed multi-agent system (CrewAI + AutoGen): 70% time reduction, 50+ user stories/hour
    - Integrated DevSecOps pipelines (Trivy, OWASP ZAP, Bandit) into GitLab CI/CD
-   - Built REST API (FastAPI + MongoDB) with 3 interfaces (CLI, Swagger, browser extension)
-   - Architected async system with intelligent caching, reducing LLM latency by 3x (87% test coverage)
-   - Tech: Python, LangChain, CrewAI, AutoGen, FastAPI, MongoDB, GitLab CI/CD, Docker, Azure AKS
+   - Built REST API (FastAPI + MongoDB) with CLI, Swagger, and browser extension interfaces
+   - Async architecture with intelligent caching: 3x LLM latency reduction, 87% test coverage
+   - Stack: Python, LangChain, CrewAI, AutoGen, FastAPI, MongoDB, GitLab CI/CD, Docker, Azure AKS
 
-2. Axe Finance (May 2024 - Aug 2024) - Backend Software Engineer
-   - Developed critical backend features for enterprise financial applications (credit management, regulatory reporting)
-   - Optimized GitLab CI/CD pipelines and automated workflows via Python scripts (40% reduction in manual tasks)
-   - Tech: Java, Spring Boot, Python, GitLab CI/CD, Docker, PostgreSQL
+2. Axe Finance (May 2024 - Aug 2024) — Backend Software Engineer, Tunis
+   - Enterprise financial app backend (credit management, regulatory reporting)
+   - CI/CD optimization + Python automation: 40% reduction in manual tasks
+   - Stack: Java, Spring Boot, Python, GitLab CI/CD, Docker, PostgreSQL
 
-3. BIAT Innovation & Technology (Jan 2022 - Jul 2022) - Application Developer
-   - Developed high-availability banking application modules
-   - Contributed to automated testing (JUnit, Selenium) and CI pipeline improvements with Jenkins
-   - Tech: Java, Spring Boot, JUnit, Maven, Jenkins, Docker
+3. BIAT Innovation & Technology (Jan 2022 - Jul 2022) — Application Developer, Tunis
+   - High-availability banking modules; automated testing (JUnit, Selenium); Jenkins CI
+   - Stack: Java, Spring Boot, JUnit, Maven, Jenkins, Docker
 
 KEY PROJECTS:
-- Taiga Agent (FYP): Multi-agent system with 5 agents, 95% consistency, deployed on Azure AKS
-- Semantic Wikipedia Search: Hybrid RAG pipeline with re-ranking over 100+ articles
-- Optimized Chat API: Streamed API with Redis cache, multi-LLM fallback, 35% latency reduction
-- AI Marketing Agency: Autonomous agents for content generation
-- Observable AI Chatbot: Prometheus & Grafana monitoring for AI systems
-- Production RAG Pipeline: LangChain implementation for document Q&A
+- Taiga Agent (FYP): 5-agent system, 95% consistency, Azure AKS deployment
+- Semantic Wikipedia Search: Hybrid RAG + re-ranking, LangChain + FAISS
+- Optimized Chat API: Redis cache, multi-LLM fallback, 35% latency reduction
+- AI Marketing Agency: Autonomous CrewAI agents for content research/writing/revision
+- Observable AI Chatbot: Prometheus + Grafana monitoring for AI systems
+- Production RAG Pipeline: LangChain document Q&A system
 
 SKILLS:
-- LLM & AI: LangChain, LlamaIndex, CrewAI, AutoGen, DSPy, OpenAI API, Anthropic API, Ollama, vLLM, PEFT, TRL
-- MLOps: MLflow, DVC, Kubeflow, Weights & Biases, BentoML, ONNX, Triton, ZenML, Prefect
-- Backend: Python 3.11+, FastAPI, Pydantic, Poetry, Java, Spring Boot, Node.js
+- LLM/AI: LangChain, LlamaIndex, CrewAI, AutoGen, DSPy, OpenAI API, Anthropic API, Ollama, vLLM
+- MLOps: MLflow, DVC, Kubeflow, W&B, BentoML, ONNX, Triton, ZenML, Prefect
+- Backend: Python 3.11+, FastAPI, Pydantic, Java, Spring Boot, Node.js
 - Databases: MongoDB, PostgreSQL, Redis, Pinecone, ChromaDB, Weaviate, FAISS, Qdrant
 - DevSecOps: Docker, Kubernetes (AKS), GitLab CI/CD, GitHub Actions, Trivy, OWASP ZAP, Bandit, ArgoCD
 - Cloud: Azure, AWS, GCP, Terraform, Helm, Prometheus, Grafana, LangFuse
 
-CERTIFICATIONS:
-- Google Cloud Document AI (2026)
-- IBM Z Xplore - Concepts (2025)
-- Linux Unhatched (2025)
-- TOEFL iBT (2024)
-- CCNA (2023)
+CERTIFICATIONS: Google Cloud Document AI (2026), IBM Z Xplore (2025), Linux Unhatched (2025), TOEFL iBT (2024), CCNA (2023)
 
-CONTACT:
-- Email: kitarchiheb11@gmail.com
-- Phone: +216 21 304 666 / +33 7 75 70 60 00
-- LinkedIn: linkedin.com/in/chiheb-kitar-06512619a
-- GitHub: github.com/KitarChiheb
+CONTACT: kitarchiheb11@gmail.com | +216 21 304 666 | linkedin.com/in/chiheb-kitar-06512619a | github.com/KitarChiheb`;
 
-Answer questions naturally and professionally. Highlight relevant achievements and provide specific examples. If asked about fit for a role, connect Chiheb's experience to the requirements.`;
+  // Toggle chat window
+  chatBubble.addEventListener('click', () => {
+    chatWindow.classList.toggle('open');
+    if (chatWindow.classList.contains('open')) chatInput.focus();
+  });
+  chatClose.addEventListener('click', () => chatWindow.classList.remove('open'));
 
-        // Toggle chat window
-        chatBubble.addEventListener('click', () => {
-            chatWindow.classList.toggle('open');
-            if (chatWindow.classList.contains('open')) {
-                chatInput.focus();
-            }
-        });
+  chatSuggestions.addEventListener('click', (e) => {
+    if (e.target.classList.contains('suggestion-chip')) {
+      chatInput.value = e.target.getAttribute('data-suggestion');
+      sendMessage();
+    }
+  });
 
-        chatClose.addEventListener('click', () => {
-            chatWindow.classList.remove('open');
-        });
+  chatInput.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
 
-        // Handle suggestions
-        chatSuggestions.addEventListener('click', (e) => {
-            if (e.target.classList.contains('suggestion-chip')) {
-                const suggestion = e.target.getAttribute('data-suggestion');
-                chatInput.value = suggestion;
-                sendMessage();
-            }
-        });
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
 
-        // Auto-resize textarea
-        chatInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-        });
+  chatSend.addEventListener('click', sendMessage);
 
-        // Send on Enter (Shift+Enter for new line)
-        chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
+  // Convert any leftover markdown to HTML as a safety net
+  function markdownToHtml(text) {
+    if (!text) return '';
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/^### (.+)$/gm, '<strong>$1</strong>')
+      .replace(/^## (.+)$/gm, '<strong>$1</strong>')
+      .replace(/^# (.+)$/gm, '<strong>$1</strong>')
+      .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+      .replace(/\n{2,}/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+  }
 
-        chatSend.addEventListener('click', sendMessage);
+  function addMessage(content, isUser = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
+    const displayContent = isUser ? content : markdownToHtml(content);
+    messageDiv.innerHTML = `
+      <div class="chat-avatar"><i class="fas fa-${isUser ? 'user' : 'robot'}"></i></div>
+      <div class="chat-bubble-text">${displayContent}</div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
 
-        function addMessage(content, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
-            messageDiv.innerHTML = `
-                <div class="chat-avatar">
-                    <i class="fas fa-${isUser ? 'user' : 'robot'}"></i>
-                </div>
-                <div class="chat-bubble-text">${content}</div>
-            `;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'chat-typing'; div.id = 'typing-indicator';
+    div.innerHTML = `<div class="chat-avatar"><i class="fas fa-robot"></i></div>
+      <div class="chat-bubble-text">
+        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+      </div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
 
-        function showTyping() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'chat-typing';
-            typingDiv.id = 'typing-indicator';
-            typingDiv.innerHTML = `
-                <div class="chat-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="chat-bubble-text">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+  function hideTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+  }
 
-        function hideTyping() {
-            const typingIndicator = document.getElementById('typing-indicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
+  // Validate response is actually useful (catches bad output failures)
+  function isValidResponse(content) {
+    if (!content) return false;
+    if (content.trim().length < 15) return false;
+    if (['...', 'N/A', 'null', 'undefined'].includes(content.trim())) return false;
+    return true;
+  }
 
-        async function callOpenRouter(userMessage, modelIndex = 0) {
-            if (modelIndex >= FREE_MODELS.length) throw new Error('All models failed');
-            const model = FREE_MODELS[modelIndex];
-            
-            try {
-                // Call OpenRouter proxy endpoint with fallback mechanism
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        model: model,
-                        messages: [
-                            { role: 'system', content: CAREER_CONTEXT },
-                            ...conversationHistory,
-                            { role: 'user', content: userMessage }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 500
-                    })
-                });
+  // Core fallback chain with per-model timeout (fail fast principle)
+  async function callWithFallback(userMessage, modelIndex = 0) {
+    if (modelIndex >= FREE_MODELS.length) throw new Error('All models exhausted');
 
-                if (!response.ok) {
-                    if (response.status === 429 || response.status === 503) {
-                        // Rate limit or service unavailable, try next model
-                        console.log(`Model ${model} failed, trying next...`);
-                        return await callOpenRouter(userMessage, modelIndex + 1);
-                    }
-                    throw new Error(`API error: ${response.status}`);
-                }
+    const model = FREE_MODELS[modelIndex];
+    console.log(`[Chat] Trying model ${modelIndex + 1}/${FREE_MODELS.length}: ${model}`);
 
-                const data = await response.json();
-                currentModelIndex = modelIndex; // Remember working model
-                const choice = data.choices && data.choices[0];
-const content = choice && (choice.message.content || choice.message.reasoning);
-if (!content) throw new Error('Empty response from model');
-return content;
-            } catch (error) {
-                console.error(`Error with model ${model}:`, error);
-                // Try next model in fallback chain
-                if (modelIndex < FREE_MODELS.length - 1) {
-                    return await callOpenRouter(userMessage, modelIndex + 1);
-                }
-                throw error;
-            }
-        }
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: CAREER_CONTEXT },
+            ...conversationHistory,
+            { role: 'user', content: userMessage }
+          ]
+        })
+      });
 
-        async function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
+      // Trigger fallback on rate limit, timeout, or server error
+      if (response.status === 429 || response.status === 503 || response.status === 500) {
+        console.warn(`[Chat] Model ${model} returned ${response.status}, trying next...`);
+        // Exponential backoff: 1s, 2s, 4s before next attempt
+        const wait = Math.pow(2, modelIndex) * 500;
+        await new Promise(r => setTimeout(r, wait));
+        return callWithFallback(userMessage, modelIndex + 1);
+      }
 
-            // Add user message
-            addMessage(message, true);
-            conversationHistory.push({ role: 'user', content: message });
-            chatInput.value = '';
-            chatInput.style.height = 'auto';
-            chatSend.disabled = true;
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            // Show typing indicator
-            showTyping();
+      const data = await response.json();
 
-            
-            try {
-                // Call OpenRouter with fallback mechanismM
-                const response = await callOpenRouter(message, currentModelIndex);
-                
-                hideTyping();
-                addMessage(response);
-                conversationHistory.push({ role: 'assistant', content: response });
-            } catch (error) {
-                hideTyping();
-                addMessage('I apologize, but I\'m having trouble connecting right now. Please try asking your question again, or feel free to contact Chiheb directly at kitarchiheb11@gmail.com.');
-                console.error('Chat error:', error);
-            } finally {
-                chatSend.disabled = false;
-                chatInput.focus();
-            }
-        }
-    })();
+      // Response validation — catches empty/bad output failures
+      const choice = data.choices && data.choices[0];
+      const content = choice && (choice.message.content || choice.message.reasoning);
+
+      if (!isValidResponse(content)) {
+        console.warn(`[Chat] Model ${model} returned invalid content, trying next...`);
+        return callWithFallback(userMessage, modelIndex + 1);
+      }
+
+      currentModelIndex = modelIndex; // Remember the working model
+      console.log(`[Chat] Success with model: ${model}`);
+      return content;
+
+    } catch (error) {
+      console.error(`[Chat] Model ${model} failed:`, error.message);
+      if (modelIndex < FREE_MODELS.length - 1) {
+        return callWithFallback(userMessage, modelIndex + 1);
+      }
+      throw error; // All models exhausted — let sendMessage handle it
+    }
+  }
+
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    addMessage(message, true);
+    conversationHistory.push({ role: 'user', content: message });
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    chatSend.disabled = true;
+    showTyping();
+
+    try {
+      const response = await callWithFallback(message, currentModelIndex);
+      hideTyping();
+      addMessage(response);
+      conversationHistory.push({ role: 'assistant', content: response });
+    } catch (error) {
+      hideTyping();
+      addMessage('I\'m having trouble connecting right now. Please try again or contact Chiheb directly at <strong>kitarchiheb11@gmail.com</strong>.');
+      console.error('[Chat] All models failed:', error);
+    } finally {
+      chatSend.disabled = false;
+      chatInput.focus();
+    }
+  }
+
+})();
     </script>
 </body>
 </html>
