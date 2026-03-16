@@ -414,7 +414,7 @@
         .ai-chat-widget { position: fixed; bottom: 2rem; right: 2rem; z-index: 10000; }
         .chat-bubble { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple));
             display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 32px rgba(0,229,255,0.3);
-            transition: all 0.3s; border: 2px solid rgba(255,255,255,0.1); z-index: 10001; }
+            transition: all 0.3s; border: 2px solid rgba(255,255,255,0.1); }
         .chat-bubble:hover { transform: scale(1.1); box-shadow: 0 12px 48px rgba(0,229,255,0.5); }
         .chat-bubble i { font-size: 1.5rem; color: white; }
         .chat-window { position: fixed; bottom: 6rem; right: 2rem; width: 420px; height: 600px;
@@ -1194,9 +1194,7 @@
     <script>
     // === AI CAREER ASSISTANT CHATBOT ===
     (function() {
-        const API_KEY = process.env.OPENROUTER_API_KEY;
-        const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-        
+                
         // Free model fallback chain (5 models)
         const FREE_MODELS = [
             'nvidia/nemotron-3-super-120b-a12b:free',
@@ -1351,21 +1349,14 @@ Answer questions naturally and professionally. Highlight relevant achievements a
         }
 
         async function callOpenRouter(userMessage, modelIndex = 0) {
-            if (modelIndex >= FREE_MODELS.length) {
-                throw new Error('All models failed');
-            }
-
+            if (modelIndex >= FREE_MODELS.length) throw new Error('All models failed');
             const model = FREE_MODELS[modelIndex];
             
             try {
-                const response = await fetch(API_URL, {
+                // Call OpenRouter proxy endpoint with fallback mechanism
+                const response = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'HTTP-Referer': window.location.href,
-                        'X-Title': 'Chiheb Kitar Portfolio'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: model,
                         messages: [
@@ -1414,15 +1405,7 @@ Answer questions naturally and professionally. Highlight relevant achievements a
             // Show typing indicator
             showTyping();
 
-            // Check if API key is available
-            if (!API_KEY) {
-                hideTyping();
-                addMessage('The AI assistant is currently unavailable. Please contact Chiheb directly at kitarchiheb11@gmail.com or check back later.');
-                chatSend.disabled = false;
-                chatInput.focus();
-                return;
-            }
-
+            
             try {
                 // Call OpenRouter with fallback mechanismM
                 const response = await callOpenRouter(message, currentModelIndex);
