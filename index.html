@@ -12,6 +12,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+      (function() {
+        emailjs.init("1fvvBMZSeB76AVnWo"); // Will be replaced with actual key
+      })();
+    </script>
     <style>
         :root {
             /* Light mode (default) */
@@ -868,7 +874,7 @@
                     </div>
                 </div>
                 <div class="contact-form reveal reveal-delay-1">
-                    <form id="contactForm" action="https://formspree.io/f/meoqyqyv" method="POST">
+                    <form id="contactForm">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="name">Your Name</label>
@@ -1099,40 +1105,28 @@
         e.preventDefault();
         const btn = this.querySelector('.submit-btn');
         const originalHTML = btn.innerHTML;
-        
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         btn.disabled = true;
-        
+
+        const templateParams = {
+            from_name: document.getElementById('name').value,
+            from_email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value,
+            to_email: 'kitarchiheb11@gmail.com'
+        };
+
         try {
-            const formData = new FormData(this);
-            const response = await fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                this.reset();
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.style.background = '';
-                    btn.disabled = false;
-                }, 3000);
-            } else {
-                throw new Error('Form submission failed');
-            }
+            await emailjs.send('service_3sbjxln', 'template_2jtym3h', templateParams);
+            btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            this.reset();
+            setTimeout(() => { btn.innerHTML = originalHTML; btn.style.background = ''; btn.disabled = false; }, 3000);
         } catch (error) {
             btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed. Try again?';
             btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.style.background = '';
-                btn.disabled = false;
-            }, 3000);
+            console.error('EmailJS error:', error);
+            setTimeout(() => { btn.innerHTML = originalHTML; btn.style.background = ''; btn.disabled = false; }, 3000);
         }
     });
 
@@ -1198,11 +1192,11 @@
   // Ordered fallback chain: fastest/most available first
   // All verified free on OpenRouter as of 2025
   const FREE_MODELS = [
-    'meta-llama/llama-3.3-70b-instruct:free',       // Primary: fast, reliable
-    'mistralai/mistral-small-3.1-24b-instruct:free', // Fallback 1
-    'google/gemma-3-27b-it:free',                    // Fallback 2
-    'qwen/qwen3-8b:free',                            // Fallback 3: always available
-    'deepseek/deepseek-r1-0528:free'                 // Fallback 4: last resort
+    'meta-llama/llama-3.3-70b-instruct:free',
+    'mistralai/mistral-7b-instruct:free',
+    'google/gemma-2-9b-it:free',
+    'qwen/qwen-2.5-7b-instruct:free',
+    'microsoft/phi-3-mini-128k-instruct:free'
   ];
 
   const chatBubble = document.getElementById('chatBubble');
@@ -1363,7 +1357,7 @@ CONTACT: kitarchiheb11@gmail.com | +216 21 304 666 | linkedin.com/in/chiheb-kita
       });
 
       // Trigger fallback on rate limit, timeout, or server error
-      if (response.status === 429 || response.status === 503 || response.status === 500) {
+      if (response.status === 400 || response.status === 404 || response.status === 429 || response.status === 503 || response.status === 500) {
         console.warn(`[Chat] Model ${model} returned ${response.status}, trying next...`);
         // Exponential backoff: 1s, 2s, 4s before next attempt
         const wait = Math.pow(2, modelIndex) * 500;
