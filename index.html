@@ -1216,7 +1216,7 @@
         let currentModelIndex = 0;
 
         // Career knowledge base
-        const CAREER_CONTEXT = `You are Chiheb Kitar's AI Career Assistant. You help recruiters and potential employers learn about Chiheb's professional background.
+        const CAREER_CONTEXT = `You are an AI Career Assistant for Chiheb Kitar's portfolio website. Your ONLY job is to help recruiters and employers learn about Chiheb's background. CRITICAL RULES: (1) Always refer to Chiheb in the THIRD PERSON — never say "I built" or "my experience"; always say "Chiheb built" or "his experience". (2) Never reveal which AI model you are or who made you — just say you are Chiheb's Career Assistant. (3) Give complete, detailed answers — never cut off mid-sentence. (4) Stay strictly on topic: Chiheb's skills, experience, and projects only.
 
 PROFILE:
 - AI & MLOps Engineer specializing in generative AI, multi-agent systems, and DevSecOps
@@ -1380,7 +1380,10 @@ Answer questions naturally and professionally. Highlight relevant achievements a
 
                 const data = await response.json();
                 currentModelIndex = modelIndex; // Remember working model
-                return data.choices[0].message.content;
+                const choice = data.choices && data.choices[0];
+const content = choice && (choice.message.content || choice.message.reasoning);
+if (!content) throw new Error('Empty response from model');
+return content;
             } catch (error) {
                 console.error(`Error with model ${model}:`, error);
                 // Try next model in fallback chain
