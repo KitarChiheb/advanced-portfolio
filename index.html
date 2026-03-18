@@ -1334,7 +1334,7 @@ CONTACT: kitarchiheb11@gmail.com | +216 21 304 666 | linkedin.com/in/chiheb-kita
     if (['...', 'N/A', 'null', 'undefined'].includes(content.trim())) return false;
     return true;
   }
-
+  //
   // Core fallback chain with per-model timeout (fail fast principle)
   async function callWithFallback(userMessage, modelIndex = 0) {
     if (modelIndex >= FREE_MODELS.length) throw new Error('All models exhausted');
